@@ -1,0 +1,26 @@
+[
+  {
+    "username": "jdoe",
+    "cn": "John Doe",
+    "nfcTagID": "1234567890",
+    "groups": ["family", "admin"]
+  },
+  {
+    "username": "asmith",
+    "cn": "Alice Smith",
+    "nfcTagID": "0987654321",
+    "groups": ["family", "guest"]
+  },
+  {
+    "username": "bwayne",
+    "cn": "Bruce Wayne",
+    "nfcTagID": "111222333444",
+    "groups": ["family"]
+  },
+  {
+    "username": "clane",
+    "cn": "Clark Lane",
+    "nfcTagID": "",
+    "groups": ["family"]
+  }
+]
