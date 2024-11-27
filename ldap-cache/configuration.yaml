@@ -1,0 +1,2 @@
+shell_command:
+  update_ldap_cache: "/bin/bash /config/ldap-cache.sh"
