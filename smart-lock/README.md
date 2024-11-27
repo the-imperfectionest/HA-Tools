@@ -48,7 +48,7 @@ This guide provides instructions for setting up a master bedroom smart lock syst
 
 ---
 
-### Sanitized ESPHome YAML Configuration
+### ESPHome YAML Configuration
 
 ```yaml
 esphome:
@@ -161,7 +161,7 @@ sensor:
 
 ---
 
-### Sanitized LDAP-Based Unlock Automation
+### LDAP-Based Unlock Automation
 
 ```yaml
 alias: Unlock Master Bedroom Door
