@@ -1,0 +1,5 @@
+This is not beautiful Git. I do not intend to make it such.
+
+My goal with this is to be able to have people easily replicate my work with Home Assistant OS to better secure their house on a tight budget
+
+I added in some tools, like AD integration, and I'll make ChatGPT write a howto, where to place the files and such. Even include yaml's and stuff once sanitzed.
