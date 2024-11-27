@@ -1,0 +1,107 @@
+```yaml
+esphome:
+  name: name_your_esp32_I_used_room_names
+  friendly_name: master_bedroom
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    type: arduino
+
+logger:
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  manual_ip:
+    static_ip: 192.168.x.y  # Replace with your desired static IP
+    gateway: 192.168.x.1     # Replace with your network gateway
+    subnet: 255.255.255.0
+
+  ap:
+    ssid: "Esp32-Test Fallback Hotspot"
+    password: "FallbackPassword"
+
+captive_portal:
+
+i2c:
+  sda: GPIO1
+  scl: GPIO3
+  scan: true
+
+pn532_i2c:
+  update_interval: 1s
+  on_tag:
+    then:
+      - lambda: |-
+          std::string scanned_uid = "";
+          for (auto byte : x) {
+            char buffer[4];
+            sprintf(buffer, "%02X", byte);
+            scanned_uid += buffer;
+            scanned_uid += "-";
+          }
+          if (!scanned_uid.empty()) {
+            scanned_uid.pop_back();
+          }
+          ESP_LOGD("NFC", "Scanned UID: %s", scanned_uid.c_str());
+          id(uid_sensor).publish_state(scanned_uid);
+
+text_sensor:
+  - platform: template
+    name: "Master Bedroom NFC UID Sensor"
+    id: uid_sensor
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO18
+      mode: INPUT_PULLUP
+    name: "Master Bedroom Door Sensor"
+    id: door_sensor
+    device_class: door
+    filters:
+      - delayed_on: 10ms
+      - delayed_off: 10ms
+
+  - platform: gpio
+    pin:
+      number: GPIO7
+      mode: INPUT_PULLUP
+    name: "Exit Button"
+    id: exit_button
+    device_class: door
+    on_press:
+      then:
+        - logger.log: "Master Bedroom Button Pressed"
+        - switch.turn_on: door_lock
+        - delay: 5s
+        - switch.turn_off: door_lock
+
+switch:
+  - platform: gpio
+    name: "Master Bedroom Door Lock"
+    id: door_lock
+    pin: GPIO5
+    restore_mode: ALWAYS_OFF
+
+sensor:
+  - platform: dht
+    pin: GPIO2
+    model: DHT11
+    temperature:
+      name: "Master Bedroom Temperature"
+      id: master_bedroom_temperature
+      unit_of_measurement: "°F"
+    humidity:
+      name: "Master Bedroom Humidity"
+      id: master_bedroom_humidity
+      unit_of_measurement: "%"
