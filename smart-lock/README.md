@@ -1,18 +1,18 @@
 ### Smart Lock and NFC Integration Using ESPHome and Home Assistant
-**⚠️ This is a Work in Progress ⚠️**
+**⚠️ This is a Work in Progress ⚠️**  
 **⚠️ JSON Read Bug - Beware ⚠️**
 
-This guide provides instructions for setting up a master bedroom smart lock system integrating ESPHome, an NFC reader, and Home Assistant. It also explains how to use the exit button physically and operate the lock via Home Assistant.
+This guide provides instructions for setting up a master bedroom smart lock system integrating ESPHome, an NFC reader, and Home Assistant. It also explains how to wire the components, use the exit button physically, and operate the lock via Home Assistant.
 
 ---
 
 ### Hardware Components - Not affiliate links, just what I used
 
-1. **Control Module:** ESP32-C3 DevKitM-1  https://www.amazon.com/dp/B0CNGH75XD
-2. **NFC Reader:** PN532 connected via I2C  https://www.amazon.com/dp/B0DDKX2JCD
-3. **Door Lock Strike, Relay, Exit Button** SY-2320  https://www.amazon.com/dp/B0BRM9YDJB
-5. **Temperature & Humidity Sensor:** DHT11 - These might secretely be DHT22's https://www.amazon.com/dp/B092M8GSTD
-6. **Reed sensor**  https://www.amazon.com/dp/B0DKW7K26G
+1. **Control Module:** [ESP32-C3 DevKitM-1](https://www.amazon.com/dp/B0CNGH75XD)
+2. **NFC Reader:** [PN532 connected via I2C](https://www.amazon.com/dp/B0DDKX2JCD)
+3. **Door Lock Strike, Relay, Exit Button:** [SY-2320](https://www.amazon.com/dp/B0BRM9YDJB)
+4. **Temperature & Humidity Sensor:** [DHT11 (possibly DHT22)](https://www.amazon.com/dp/B092M8GSTD)
+5. **Reed Sensor:** [Magnetic Door Sensor](https://www.amazon.com/dp/B0DKW7K26G)
 
 ---
 
@@ -48,46 +48,74 @@ This guide provides instructions for setting up a master bedroom smart lock syst
 
 ---
 
+### Wiring Instructions
+
+#### **ESP32-C3 Connections**
+- **Power Supply:**
+  - 3.3V and GND pins on ESP32-C3 to power PN532, DHT11, and magnetic sensor.
+- **NFC Reader (PN532):**
+  - **SDA:** Connect to GPIO1 (I2C SDA).
+  - **SCL:** Connect to GPIO3 (I2C SCL).
+- **Door Lock Relay:**
+  - **Control Pin:** GPIO5 connects to the relay input (IN).
+  - **Relay Power:** Connect VCC and GND on the relay module to a 5V source and GND on the ESP32-C3.
+  - **Relay Output:** Wire the relay NO (Normally Open) and COM (Common) to the door strike's power input.
+  - **Door Strike Power:** Connect to a 12V DC power supply.
+- **Exit Button:**
+  - One side of the button connects to GPIO7.
+  - The other side connects to GND.
+- **Reed Sensor (Door Sensor):**
+  - Connect one wire of the reed sensor to GPIO18.
+  - Connect the other wire to GND.
+- **DHT11 Sensor:**
+  - Data pin connects to GPIO2.
+  - Power pins connect to 3.3V and GND.
+
 ---
 
-### LDAP-Based Unlock Automation
+### YAML Configuration Recap
+
+The wiring above corresponds to the following YAML configuration:
 
 ```yaml
-alias: Unlock Master Bedroom Door
-trigger:
-  - platform: state
-    entity_id: sensor.master_bedroom_nfc_uid_sensor
-action:
-  - variables:
-      ldap_cache: "{{ states('sensor.ad_user_cache') | from_json }}"
-      scanned_uid: "{{ trigger.to_state.state }}"
-      user: >
-        {{ ldap_cache | selectattr('nfcTagID', 'eq', scanned_uid) | list | first }}
-  - choose:
-      - conditions:
-          - condition: template
-            value_template: >
-              {{ user is not none and
-                 ('CN=authorized-group-1,' in user.groups | join('') or
-                  'CN=authorized-group-2,' in user.groups | join('')) }}
-        sequence:
-          - service: switch.turn_on
-            target:
-              entity_id: switch.master_bedroom_door_lock
-          - delay: "00:00:05"
-          - service: switch.turn_off
-              target:
-              entity_id: switch.master_bedroom_door_lock
-      default:
-        - service: logbook.log
-          data:
-            name: "Unauthorized NFC Scan"
-            message: >
-              {% if user is not none %}
-                {{ user['cn'] }} attempted to scan at the Master Bedroom Door but is unauthorized.
-              {% else %}
-                Unknown UID {{ scanned_uid }} attempted to scan at the Master Bedroom Door.
-              {% endif %}
+switch:
+  - platform: gpio
+    name: "Master Bedroom Door Lock"
+    id: door_lock
+    pin: GPIO5
+    restore_mode: ALWAYS_OFF
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO18
+      mode: INPUT_PULLUP
+    name: "Master Bedroom Door Sensor"
+    id: door_sensor
+    device_class: door
+
+  - platform: gpio
+    pin:
+      number: GPIO7
+      mode: INPUT_PULLUP
+    name: "Exit Button"
+    id: exit_button
+    device_class: door
+    on_press:
+      then:
+        - logger.log: "Master Bedroom Button Pressed"
+        - switch.turn_on: door_lock
+        - delay: 5s
+        - switch.turn_off: door_lock
+
+sensor:
+  - platform: dht
+    pin: GPIO2
+    model: DHT11
+    temperature:
+      name: "Master Bedroom Temperature"
+    humidity:
+      name: "Master Bedroom Humidity"
 ```
 
 ---
@@ -98,8 +126,10 @@ action:
    - Move sensitive information (e.g., passwords, keys) to `secrets.yaml` for better security.
 
 2. **Restricted Groups:**
-   - Replace `authorized-group-1` and `authorized-group-2` with the actual LDAP groups permitted for access.
+   - Replace `authorized-group-1` and `authorized-group-2` in your Home Assistant automation with the actual LDAP groups permitted for access.
 
 3. **Secure Wi-Fi:** Ensure you use a secure Wi-Fi network for ESP32 communication.
 
+---
 
+This guide includes detailed instructions for both wiring and configuration, ensuring a comprehensive and secure setup. Let me know if further clarifications are needed!
