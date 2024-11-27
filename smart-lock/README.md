@@ -73,50 +73,7 @@ This guide provides instructions for setting up a master bedroom smart lock syst
 
 ---
 
-### YAML Configuration Recap
 
-The wiring above corresponds to the following YAML configuration:
-
-```yaml
-switch:
-  - platform: gpio
-    name: "Master Bedroom Door Lock"
-    id: door_lock
-    pin: GPIO5
-    restore_mode: ALWAYS_OFF
-
-binary_sensor:
-  - platform: gpio
-    pin:
-      number: GPIO18
-      mode: INPUT_PULLUP
-    name: "Master Bedroom Door Sensor"
-    id: door_sensor
-    device_class: door
-
-  - platform: gpio
-    pin:
-      number: GPIO7
-      mode: INPUT_PULLUP
-    name: "Exit Button"
-    id: exit_button
-    device_class: door
-    on_press:
-      then:
-        - logger.log: "Master Bedroom Button Pressed"
-        - switch.turn_on: door_lock
-        - delay: 5s
-        - switch.turn_off: door_lock
-
-sensor:
-  - platform: dht
-    pin: GPIO2
-    model: DHT11
-    temperature:
-      name: "Master Bedroom Temperature"
-    humidity:
-      name: "Master Bedroom Humidity"
-```
 
 ---
 
