@@ -1,4 +1,4 @@
-```yaml
+
 esphome:
   name: name_your_esp32_I_used_room_names
   friendly_name: master_bedroom
