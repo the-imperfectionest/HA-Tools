@@ -1,0 +1,35 @@
+alias: Unlock Master Bedroom Door
+trigger:
+  - platform: state
+    entity_id: sensor.master_bedroom_nfc_uid_sensor
+action:
+  - variables:
+      ldap_cache: "{{ states('sensor.ad_user_cache') | from_json }}"
+      scanned_uid: "{{ trigger.to_state.state }}"
+      user: >
+        {{ ldap_cache | selectattr('nfcTagID', 'eq', scanned_uid) | list | first }}
+  - choose:
+      - conditions:
+          - condition: template
+            value_template: >
+              {{ user is not none and
+                 ('CN=authorized-group-1,' in user.groups | join('') or
+                  'CN=authorized-group-2,' in user.groups | join('')) }}
+        sequence:
+          - service: switch.turn_on
+            target:
+              entity_id: switch.master_bedroom_door_lock
+          - delay: "00:00:05"
+          - service: switch.turn_off
+              target:
+              entity_id: switch.master_bedroom_door_lock
+      default:
+        - service: logbook.log
+          data:
+            name: "Unauthorized NFC Scan"
+            message: >
+              {% if user is not none %}
+                {{ user['cn'] }} attempted to scan at the Master Bedroom Door but is unauthorized.
+              {% else %}
+                Unknown UID {{ scanned_uid }} attempted to scan at the Master Bedroom Door.
+              {% endif %}
