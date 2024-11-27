@@ -1,0 +1,8 @@
+light:
+  - platform: group
+    name: all_wiz_lights
+    entities:
+      - light.wiz_rgbww_tunable_f76132  # Replace with your light entity IDs
+      - light.wiz_rgbw_tunable_d9e9fd
+      - light.wiz_rgbw_tunable_4781a0
+      - light.wiz_rgbw_tunable_8fd746
