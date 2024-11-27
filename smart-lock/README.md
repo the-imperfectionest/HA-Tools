@@ -6,13 +6,14 @@ This guide provides instructions for setting up a master bedroom smart lock syst
 
 ---
 
-### Hardware Components
+### Hardware Components - Not affiliate links, just what I used
 
-1. **Control Module:** ESP32-C3 DevKitM-1
-2. **NFC Reader:** PN532 connected via I2C
-3. **Door Lock Strike:** SY-2320
+1. **Control Module:** ESP32-C3 DevKitM-1  https://www.amazon.com/dp/B0CNGH75XD
+2. **NFC Reader:** PN532 connected via I2C  https://www.amazon.com/dp/B0DDKX2JCD
+3. **Door Lock Strike:** SY-2320  https://www.amazon.com/dp/B0BRM9YDJB
 4. **Exit Button:** GPIO-based switch
 5. **Temperature & Humidity Sensor:** DHT11
+6. **Reed sensor  
 
 ---
 
