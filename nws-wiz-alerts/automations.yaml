@@ -1,0 +1,242 @@
+# Tornado Warning with Initial Flashing Effect
+- alias: Tornado Warning Alert
+  trigger:
+    - platform: state
+      entity_id: sensor.nws_alerts
+  condition:
+    - condition: template
+      value_template: >
+        {{ state_attr('sensor.nws_alerts', 'Alerts') | selectattr('Event', 'equalto', 'Tornado Warning') | list | length > 0 }}
+  action:
+    - repeat:
+        count: 6
+        sequence:
+          - service: light.turn_on
+            target:
+              entity_id: light.all_wiz_lights
+            data:
+              brightness: 255
+              color_name: "red"
+              transition: 0
+          - delay: "00:00:00.25"
+          - service: light.turn_off
+            target:
+              entity_id: light.all_wiz_lights
+            data:
+              transition: 0
+          - delay: "00:00:00.25"
+    - service: light.turn_on
+      target:
+        entity_id: light.all_wiz_lights
+      data:
+        brightness: 255
+        color_name: "red"
+        transition: 0
+
+# Severe Thunderstorm Warning with Initial Flashing Effect
+- alias: Severe Thunderstorm Warning Alert
+  trigger:
+    - platform: state
+      entity_id: sensor.nws_alerts
+  condition:
+    - condition: template
+      value_template: >
+        {{ state_attr('sensor.nws_alerts', 'Alerts') | selectattr('Event', 'equalto', 'Severe Thunderstorm Warning') | list | length > 0 }}
+    - condition: template
+      value_template: >
+        {{ not (state_attr('sensor.nws_alerts', 'Alerts') | selectattr('Event', 'equalto', 'Tornado Warning') | list | length > 0) }}
+  action:
+    - repeat:
+        count: 6
+        sequence:
+          - service: light.turn_on
+            target:
+              entity_id: light.all_wiz_lights
+            data:
+              brightness: 255
+              color_name: "orange"
+              transition: 0
+          - delay: "00:00:00.25"
+          - service: light.turn_off
+            target:
+              entity_id: light.all_wiz_lights
+            data:
+              transition: 0
+          - delay: "00:00:00.25"
+    - service: light.turn_on
+      target:
+        entity_id: light.all_wiz_lights
+      data:
+        brightness: 255
+        color_name: "orange"
+        transition: 0
+
+# Tornado Watch with Initial Flashing Effect
+- alias: Tornado Watch Alert
+  trigger:
+    - platform: state
+      entity_id: sensor.nws_alerts
+  condition:
+    - condition: template
+      value_template: >
+        {{ not (state_attr('sensor.nws_alerts', 'Alerts') | selectattr('Event', 'equalto', 'Tornado Warning') | list | length > 0 or
+                 state_attr('sensor.nws_alerts', 'Alerts') | selectattr('Event', 'equalto', 'Severe Thunderstorm Warning') | list | length > 0) }}
+  action:
+    - repeat:
+        count: 6
+        sequence:
+          - service: light.turn_on
+            target:
+              entity_id: light.all_wiz_lights
+            data:
+              brightness: 255
+              color_name: "yellow"
+              transition: 0
+          - delay: "00:00:00.25"
+          - service: light.turn_off
+            target:
+              entity_id: light.all_wiz_lights
+            data:
+              transition: 0
+          - delay: "00:00:00.25"
+    - service: light.turn_on
+      target:
+        entity_id: light.all_wiz_lights
+      data:
+        brightness: 255
+        color_name: "yellow"
+        transition: 0
+
+# Severe Thunderstorm Watch with Initial Flashing Effect
+- alias: Severe Thunderstorm Watch Alert
+  trigger:
+    - platform: state
+      entity_id: sensor.nws_alerts
+  condition:
+    - condition: template
+      value_template: >
+        {{ not (state_attr('sensor.nws_alerts', 'Alerts') | selectattr('Event', 'equalto', 'Tornado Warning') | list | length > 0 or
+                 state_attr('sensor.nws_alerts', 'Alerts') | selectattr('Event', 'equalto', 'Severe Thunderstorm Warning') | list | length > 0 or
+                 state_attr('sensor.nws_alerts', 'Alerts') | selectattr('Event', 'equalto', 'Tornado Watch') | list | length > 0) }}
+  action:
+    - repeat:
+        count: 6
+        sequence:
+          - service: light.turn_on
+            target:
+              entity_id: light.all_wiz_lights
+            data:
+              brightness: 255
+              color_name: "light_orange"
+              transition: 0
+          - delay: "00:00:00.25"
+          - service: light.turn_off
+            target:
+              entity_id: light.all_wiz_lights
+            data:
+              transition: 0
+          - delay: "00:00:00.25"
+    - service: light.turn_on
+      target:
+        entity_id: light.all_wiz_lights
+      data:
+        brightness: 255
+        color_name: "light_orange"
+        transition: 0
+
+# Blizzard Warning with Initial Flashing Effect
+- alias: Blizzard Warning Alert
+  trigger:
+    - platform: state
+      entity_id: sensor.nws_alerts
+  condition:
+    - condition: template
+      value_template: >
+        {{ not (state_attr('sensor.nws_alerts', 'Alerts') | selectattr('Event', 'equalto', 'Tornado Warning') | list | length > 0 or
+                 state_attr('sensor.nws_alerts', 'Alerts') | selectattr('Event', 'equalto', 'Severe Thunderstorm Warning') | list | length > 0 or
+                 state_attr('sensor.nws_alerts', 'Alerts') | selectattr('Event', 'equalto', 'Tornado Watch') | list | length > 0 or
+                 state_attr('sensor.nws_alerts', 'Alerts') | selectattr('Event', 'equalto', 'Severe Thunderstorm Watch') | list | length > 0) }}
+  action:
+    - repeat:
+        count: 6
+        sequence:
+          - service: light.turn_on
+            target:
+              entity_id: light.all_wiz_lights
+            data:
+              brightness: 255
+              color_name: "blue"
+              transition: 0
+          - delay: "00:00:00.25"
+          - service: light.turn_off
+            target:
+              entity_id: light.all_wiz_lights
+            data:
+              transition: 0
+          - delay: "00:00:00.25"
+    - service: light.turn_on
+      target:
+        entity_id: light.all_wiz_lights
+      data:
+        brightness: 255
+        color_name: "blue"
+        transition: 0
+
+# Winter Storm Warning with Initial Flashing Effect
+- alias: Winter Storm Warning Alert
+  trigger:
+    - platform: state
+      entity_id: sensor.nws_alerts
+  condition:
+    - condition: template
+      value_template: >
+        {{ not (state_attr('sensor.nws_alerts', 'Alerts') | selectattr('Event', 'equalto', 'Tornado Warning') | list | length > 0 or
+                 state_attr('sensor.nws_alerts', 'Alerts') | selectattr('Event', 'equalto', 'Severe Thunderstorm Warning') | list | length > 0 or
+                 state_attr('sensor.nws_alerts', 'Alerts') | selectattr('Event', 'equalto', 'Tornado Watch') | list | length > 0 or
+                 state_attr('sensor.nws_alerts', 'Alerts') | selectattr('Event', 'equalto', 'Severe Thunderstorm Watch') | list | length > 0 or
+                 state_attr('sensor.nws_alerts', 'Alerts') | selectattr('Event', 'equalto', 'Blizzard Warning') | list | length > 0) }}
+  action:
+    - repeat:
+        count: 6
+        sequence:
+          - service: light.turn_on
+            target:
+              entity_id: light.all_wiz_lights
+            data:
+              brightness: 255
+              color_name: "cyan"
+              transition: 0
+          - delay: "00:00:00.25"
+          - service: light.turn_off
+            target:
+              entity_id: light.all_wiz_lights
+            data:
+              transition: 0
+          - delay: "00:00:00.25"
+    - service: light.turn_on
+      target:
+        entity_id: light.all_wiz_lights
+      data:
+        brightness: 255
+        color_name: "cyan"
+        transition: 0
+
+# Return to Warm White When Alerts Clear
+- alias: Return to Warm White After Alerts Clear
+  trigger:
+    - platform: state
+      entity_id: sensor.nws_alerts
+  condition:
+    - condition: template
+      value_template: >
+        {{ state_attr('sensor.nws_alerts', 'Alerts') | selectattr('Event', 'in', 
+           ['Tornado Warning', 'Severe Thunderstorm Warning', 'Tornado Watch', 
+            'Severe Thunderstorm Watch', 'Blizzard Warning', 'Winter Storm Warning']) | list | length == 0 }}
+  action:
+    - service: light.turn_on
+      target:
+        entity_id: light.all_wiz_lights
+      data:
+        brightness: 200
+        color_name: "warm_white"
+        transition: 2
