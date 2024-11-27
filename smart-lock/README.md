@@ -48,7 +48,7 @@ This guide provides instructions for setting up a master bedroom smart lock syst
 
 ---
 
-### Wiring Instructions
+### Wiring Instructions - Note, these may say IO# instead of GPIO#
 
 #### **ESP32-C3 Connections**
 - **Power Supply:**
