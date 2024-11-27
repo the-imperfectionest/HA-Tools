@@ -213,6 +213,4 @@ action:
 
 3. **Secure Wi-Fi:** Ensure you use a secure Wi-Fi network for ESP32 communication.
 
----
 
-This guide combines physical lock operation with automation via Home Assistant, making it user-friendly and secure. Let me know if further adjustments are needed!
