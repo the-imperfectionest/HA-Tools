@@ -1,0 +1,11 @@
+nfc_access_control:
+  module: nfc_access_control
+  class: NFCAccessControl
+  door_access:
+    master_bedroom:
+      allowed_groups:
+        - "CN=group-adults,CN=Users,DC=example,DC=com"
+        - "CN=group-bedroom,CN=Users,DC=example,DC=com"
+    garage:
+      allowed_groups:
+        - "CN=group-adults,CN=Users,DC=example,DC=com"
