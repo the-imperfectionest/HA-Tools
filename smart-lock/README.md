@@ -1,92 +1,173 @@
-### Smart Lock and NFC Integration Using ESPHome and Home Assistant
-**⚠️ This is a Work in Progress ⚠️**  
-**⚠️ JSON Read Bug - Beware ⚠️**
-
-This guide provides instructions for setting up a master bedroom smart lock system integrating ESPHome, an NFC reader, and Home Assistant. It also explains how to wire the components, use the exit button physically, and operate the lock via Home Assistant.
+Here’s the updated guide with the directory structure reflecting the `/addon_configs/[container_name]/` path for AppDaemon's containerized environment:
 
 ---
 
-### Hardware Components - Not affiliate links, just what I used
+# **Smart Lock and NFC Integration Using ESPHome and Home Assistant**
 
-1. **Control Module:** [ESP32-C3 DevKitM-1](https://www.amazon.com/dp/B0CNGH75XD)
-2. **NFC Reader:** [PN532 connected via I2C](https://www.amazon.com/dp/B0DDKX2JCD)
-3. **Door Lock Strike, Relay, Exit Button:** [SY-2320](https://www.amazon.com/dp/B0BRM9YDJB)
-4. **Temperature & Humidity Sensor:** [DHT11 (possibly DHT22)](https://www.amazon.com/dp/B092M8GSTD)
-5. **Reed Sensor:** [Magnetic Door Sensor](https://www.amazon.com/dp/B0DKW7K26G)
+**⚠️ This is a Work in Progress ⚠️**
 
----
+This project implements an NFC-based access control system using ESPHome, AppDaemon, and Home Assistant. It integrates a PN532 NFC reader, a relay-controlled door strike, and Home Assistant's LDAP authentication for secure, automated door access.
 
-### Features
-
-- **NFC Authentication:** Scans NFC tags, publishing UIDs to Home Assistant for LDAP-based authentication.
-- **LDAP Cache Integration:** Validates NFC tags against a dynamic user cache.
-- **Exit Button:** Allows physical unlocking of the door for easy exit.
-- **Home Assistant Control:** Operate the lock directly via Home Assistant’s interface.
-- **Environment Monitoring:** Measures temperature and humidity using DHT11.
-- **Binary Door Sensor:** Detects door state (open/closed).
-- **Failsafe:** Includes a fallback hotspot for initial configuration or troubleshooting.
+If you want AD/LDAP integration/caching, check the /HA-Tools/ldap-cache/ directory of this repo
 
 ---
 
-### Physical and Home Assistant Lock Controls
+## **Features**
 
-#### Using the Exit Button
-- **Purpose:** The exit button provides a manual override to unlock the door.
-- **How It Works:** 
-  - Pressing the button unlocks the door for 5 seconds.
-  - After 5 seconds, the door automatically relocks.
-- **Location:** Typically installed near the door for easy access.
-
-#### Controlling the Lock via Home Assistant
-1. **Home Assistant Dashboard:**
-   - Locate the switch named `Master Bedroom Door Lock` in your dashboard or under **Devices & Services**.
-   - Toggle the switch:
-     - **On:** Unlocks the door.
-     - **Off:** Relocks the door.
-2. **Automation Use:** 
-   - Automate the lock based on schedules, NFC scans, or other triggers.
+- **NFC Authentication**: Scans NFC tags, validates them against an LDAP-based user cache.
+- **LDAP Cache Integration**: Authorization based on dynamic Active Directory group membership.
+- **Exit Button**: Physical button for manual door unlocking.
+- **Home Assistant Control**: Operate the lock via UI or automation.
+- **Environmental Monitoring**: Tracks temperature and humidity using DHT11 sensors.
+- **Door State Detection**: Uses a reed sensor to monitor door state (open/closed).
 
 ---
 
-### Wiring Instructions - Note, these may say IO# instead of GPIO#
+## **Hardware Components**
 
-#### **ESP32-C3 Connections**
-- **Power Supply:**
-  - 3.3V and GND pins on ESP32-C3 to power PN532, DHT11, and magnetic sensor.
-- **NFC Reader (PN532):**
-  - **SDA:** Connect to GPIO1 (I2C SDA).
-  - **SCL:** Connect to GPIO3 (I2C SCL).
-- **Door Lock Relay:**
-  - **Control Pin:** GPIO5 connects to the relay input (IN).
-  - **Relay Power:** Connect VCC and GND on the relay module to a 5V source and GND on the ESP32-C3.
-  - **Relay Output:** Wire the relay NO (Normally Open) and COM (Common) to the door strike's power input.
-  - **Door Strike Power:** Connect to a 12V DC power supply.
-- **Exit Button:**
-  - One side of the button connects to GPIO7.
-  - The other side connects to GND.
-- **Reed Sensor (Door Sensor):**
-  - Connect one wire of the reed sensor to GPIO18.
-  - Connect the other wire to GND.
-- **DHT11 Sensor:**
-  - Data pin connects to GPIO2.
-  - Power pins connect to 3.3V and GND.
+| Component                     | Example Link                                  |
+|-------------------------------|-----------------------------------------------|
+| **Control Module**            | [ESP32-C3 DevKitM-1](https://www.amazon.com/dp/B0CNGH75XD) |
+| **NFC Reader**                | [PN532 (I2C Connection)](https://www.amazon.com/dp/B0DDKX2JCD) |
+| **Door Lock Strike, Relay**   | [SY-2320](https://www.amazon.com/dp/B0BRM9YDJB) |
+| **Temperature & Humidity**    | [DHT11](https://www.amazon.com/dp/B092M8GSTD) |
+| **Magnetic Door Sensor**      | [Reed Sensor](https://www.amazon.com/dp/B0DKW7K26G) |
 
 ---
 
+## **Physical and Digital Lock Controls**
 
+### **Exit Button**
+- **Purpose**: Manual override to unlock the door for 5 seconds.
+- **Operation**: Relocks automatically after timeout.
+- **Location**: Installed near the door.
+
+### **Home Assistant Control**
+1. **UI Control**:
+   - Toggle the `Master Bedroom Door Lock` entity.
+     - **On**: Unlocks the door.
+     - **Off**: Relocks the door.
+2. **Automation**:
+   - Automate the lock based on NFC scans or schedules.
 
 ---
 
-### Notes on Security
+## **Hardware Wiring**
 
-1. **Store Secrets in `secrets.yaml`:**
-   - Move sensitive information (e.g., passwords, keys) to `secrets.yaml` for better security.
+### **ESP32-C3 Connections**
 
-2. **Restricted Groups:**
-   - Replace `authorized-group-1` and `authorized-group-2` in your Home Assistant automation with the actual LDAP groups permitted for access.
-
-3. **Secure Wi-Fi:** Ensure you use a secure Wi-Fi network for ESP32 communication.
+| Component          | ESP32 Pin  | Connection |
+|---------------------|------------|------------|
+| **Power Supply**    | 3.3V/GND   | Power NFC reader, DHT11, reed sensor |
+| **NFC Reader (PN532)** | GPIO1 (SDA) / GPIO3 (SCL) | I2C connections |
+| **Relay (Control)** | GPIO5      | Relay input (IN) |
+| **Relay (Output)**  | NO / COM   | Door strike power input |
+| **Exit Button**     | GPIO7 / GND| Manual override button |
+| **Reed Sensor**     | GPIO18 / GND | Detects door state |
+| **DHT11 Sensor**    | GPIO2      | Measures temperature/humidity |
 
 ---
 
-This guide includes detailed instructions for both wiring and configuration, ensuring a comprehensive and secure setup. Let me know if further clarifications are needed!
+## **Configuration**
+
+### **1. AppDaemon Setup**
+
+#### Prerequisites
+- Install the **AppDaemon Add-on** in Home Assistant.
+- AppDaemon runs in a containerized environment:
+  - `/addon_configs/[container_name]/` is the working directory for AppDaemon.
+
+#### Directory Structure
+- **Base Directory**: `/addon_configs/[container_name]/`
+  - **LDAP Cache File**: `/addon_configs/[container_name]/ad_user_cache.json`
+  - **Apps Directory**: `/addon_configs/[container_name]/apps/`
+
+#### App Configuration
+1. **Place Files**:
+   - `nfc_access_control.py` in `/addon_configs/[container_name]/apps/`.
+   - `apps.yaml` in `/addon_configs/[container_name]/apps/`.
+2. **Edit `apps.yaml`**:
+   ```yaml
+nfc_access_control:
+  module: nfc_access_control
+  class: NFCAccessControl
+  door_access:
+    master_bedroom:
+      allowed_groups:
+        - "CN=group-adults,CN=Users,DC=example,DC=com"
+        - "CN=group-bedroom,CN=Users,DC=example,DC=com"
+    garage:
+      allowed_groups:
+        - "CN=group-adults,CN=Users,DC=example,DC=com"
+
+   ```
+
+3. **Restart AppDaemon**:
+   - Go to Supervisor > AppDaemon > Restart.
+
+---
+
+### **2. LDAP Cache File**
+
+#### File Details
+- **Path**: `/addon_configs/[container_name]/ad_user_cache.json`
+- **Example Content**:
+   ```json
+[
+  {
+    "cn": "John Doe",
+    "username": "johnd",
+    "nfcTagID": "12-34-56-78-9A-BC-DE-F0",
+    "groups": ["CN=group-adults,CN=Users,DC=example,DC=com"]
+  },
+  {
+    "cn": "Jane Smith",
+    "username": "janes",
+    "nfcTagID": "98-76-54-32-10-FE-DC-BA",
+    "groups": ["CN=group-bedroom,CN=Users,DC=example,DC=com"]
+  }
+]
+
+   ```
+
+#### JSON Handling
+- **JSON Bug Resolved**: Using AppDaemon eliminates issues with JSON handling in Home Assistant automations.
+
+---
+
+### **3. NFC Tag Events**
+
+#### Fire Test Events
+- Use Developer Tools > Events to simulate `esphome.nfc_scan`.
+- Example Payload:
+   ```json
+   {
+     "tag_id": "YOUR_NFC_TAG_ID",
+     "door_id": "master_bedroom"
+   }
+   ```
+
+---
+
+## **Security Recommendations**
+
+1. **Restrict Access**:
+   - Limit door access to predefined LDAP groups.
+2. **Secrets Management**:
+   - Store sensitive credentials (e.g., API tokens) in `secrets.yaml`.
+3. **Secure Wi-Fi**:
+   - Use WPA2 or stronger for ESP32 connectivity.
+
+---
+
+## **Common Issues and Debugging**
+
+| Issue                 | Solution                                          |
+|------------------------|--------------------------------------------------|
+| **JSON Bug**           | Use AppDaemon for robust JSON handling.          |
+| **Tag Denied**         | Check tag ID and group association in `ad_user_cache.json`. |
+| **Door Not Unlocking** | Verify relay wiring and ESPHome configuration.   |
+| **AppDaemon Errors**   | Check AppDaemon logs for syntax or runtime issues. |
+
+---
+
