@@ -1,5 +1,98 @@
-This is not beautiful Git. I do not intend to make it such.
 
-My goal with this is to be able to have people easily replicate my work with Home Assistant OS to better secure their house on a tight budget
+---
 
-I added in some tools, like AD integration, and I'll make ChatGPT write a howto, where to place the files and such. Even include yaml's and stuff once sanitzed.
+# **Home Assistant Budget Security Project**
+
+This repository is not meant to be a beautifully polished GitHub project. Instead, it is a practical collection of tools, configurations, and instructions aimed at helping people secure their homes using Home Assistant OS on a tight budget.
+
+---
+
+## **Overview**
+
+This project provides modular directories for various functionalities:
+- **`smart-lock/`**: Standalone NFC-based smart lock code, configuration, and a basic how-to.
+- **`ldap-cache/`**: Adds Active Directory (AD) or LDAP synchronization to automate user management hourly.
+- **`nws-wiz-alerts/`**: Automations for Wiz lights to perform specific actions based on National Weather Service (NWS) alerts.
+
+Each module is designed to work independently but can be combined for a more robust home security and safety setup.
+
+---
+
+## **Directories**
+
+### **1. `smart-lock/`**
+Contains:
+- **Code**: For NFC-based smart locking using ESPHome and Home Assistant.
+- **Configuration Files**: Includes YAMLs for Home Assistant integration.
+- **How-To Guide**: Step-by-step instructions for setting up the smart lock.
+
+**Key Features**:
+- NFC reader integration using PN532.
+- Control over door locks via Home Assistant UI or automation.
+- Reed sensor-based door state monitoring.
+
+---
+
+### **2. `ldap-cache/`**
+Contains:
+- **Scripts**: For synchronizing users from AD/LDAP.
+- **Configuration**: Setup files for integrating LDAP with Home Assistant.
+- **Automation**: Automates LDAP sync hourly to keep user data up to date.
+
+**Key Features**:
+- Syncs user NFC tags and group membership.
+- Automatically updates user permissions based on LDAP groups.
+
+---
+
+### **3. `nws-wiz-alerts/`**
+Contains:
+- **Automations**: YAML files to control Wiz lights based on NWS alerts.
+- **Configuration**: Predefined alerts and corresponding light actions.
+
+**Key Features**:
+- Uses Wiz RGBWW lights for visual notifications.
+- Supports multiple NWS alert types with customizable behaviors (e.g., red lights for fire alerts, flashing for tornado warnings).
+
+---
+
+## **Getting Started**
+
+Each directory includes its own documentation and configuration examples. Start with the following steps:
+
+1. **Clone this Repository**:
+   ```bash
+   git clone https://github.com/your-username/home-assistant-budget-security.git
+   cd home-assistant-budget-security
+   ```
+
+2. **Navigate to the Desired Directory**:
+   Choose the module you want to implement:
+   - `cd smart-lock/`
+   - `cd ldap-cache/`
+   - `cd nws-wiz-alerts/`
+
+3. **Follow the Included Instructions**:
+   Each directory contains its own README or setup guide.
+
+---
+
+## **Planned Enhancements**
+
+- Comprehensive how-to guides for each module, including sanitized YAML files.
+- Expanded AD/LDAP integration tools.
+- More NWS alert types and automation examples.
+
+---
+
+## **Contributions**
+
+This project is personal and straightforward. Contributions are welcome if they align with the goal of keeping things simple and accessible.
+
+---
+
+## **License**
+
+See the attached beerware license.
+
+---
