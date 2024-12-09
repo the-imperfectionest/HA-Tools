@@ -1,22 +1,22 @@
-# **HA-Tools**
+# HA-Tools
 
 Welcome to **HA-Tools**, a practical collection of tools, configurations, and scripts designed to enhance your Home Assistant setup on a budget. This repository focuses on functionality, simplicity, and accessibility, making it easier for others to replicate and adapt these solutions for their own home automation projects.
 
 ---
 
-## **Overview**
+## Overview
 
 This repository is divided into directories, each addressing a specific aspect of home automation:
 
-- **[`smart-lock/`](smart-lock/)**: Implements a standalone NFC-based smart lock system.
-- **[`ldap-cache/`](ldap-cache/)**: Adds Active Directory (AD) or LDAP synchronization to automate user management hourly.
-- **[`nws-wiz-alerts/`](nws-wiz-alerts/)**: Automations for Wiz lights to perform specific actions based on National Weather Service (NWS) alerts.
+- [**`smart-lock/`**](smart-lock/): Implements a standalone NFC-based smart lock system.
+- [**`ldap-cache/`**](ldap-cache/): Adds Active Directory (AD) or LDAP synchronization to automate user management hourly.
+- [**`nws-wiz-alerts/`**](nws-wiz-alerts/): Automations for Wiz lights to perform specific actions based on National Weather Service (NWS) alerts.
 
 Each directory contains everything needed for implementation, including code, configuration files, and guides.
 
 ---
 
-## **Directories**
+## Directories
 
 ### **1. `smart-lock/`**
 
@@ -63,44 +63,11 @@ This directory includes:
 
 ---
 
-## **Getting Started**
+## Getting Started
 
-### **Steps**:
+### Steps:
 
 1. **Clone the Repository**:
    ```bash
    git clone https://github.com/the-imperfectionest/HA-Tools.git
    cd HA-Tools
-   ```
-
-2. **Navigate to the Desired Directory**:
-   ```bash
-   cd smart-lock/
-   cd ldap-cache/
-   cd nws-wiz-alerts/
-   ```
-
-3. **Follow the Documentation**:
-   Each directory contains its own README or setup guide.
-
----
-
-## **Planned Enhancements**
-
-- Comprehensive how-to guides for each module, including sanitized YAML files.
-- Expanded LDAP/AD integration for more robust user management.
-- Additional NWS alert types and improved light automation.
-
----
-
-## **Contributions**
-
-This project is personal and straightforward. Contributions are welcome if they align with the goal of making home automation tools simple, accessible, and budget-friendly.
-
----
-
-## **License**
-
-This project is licensed under the **beerware license**:  
-If you find this project helpful and meet me someday, feel free to buy me a beer. 🍺
-
