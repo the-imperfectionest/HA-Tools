@@ -157,4 +157,3 @@ To test NFC tags, use Developer Tools in Home Assistant:
 
 ---
 
-This guide provides step-by-step instructions to integrate an NFC-based smart lock with Home Assistant. For advanced setups or troubleshooting, refer to the project repository or open an issue.
