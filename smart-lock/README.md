@@ -1,4 +1,4 @@
-Here’s your guide optimized for GitHub with improved readability and Markdown formatting:
+
 
 ---
 
