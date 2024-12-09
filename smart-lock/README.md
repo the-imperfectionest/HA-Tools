@@ -128,10 +128,6 @@ nfc_access_control:
   }
 ]
 
-   ```
-
-#### JSON Handling
-- **JSON Bug Resolved**: Using AppDaemon eliminates issues with JSON handling in Home Assistant automations.
 
 ---
 
